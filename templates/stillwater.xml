@@ -17,7 +17,7 @@
   <Description>Stillwater is a self-hosted web application for managing artist and composer metadata across media streaming platforms. It handles NFO files, artist artwork, and metadata for Emby, Jellyfin, and Kodi libraries. Features include rule-based metadata management, multi-platform publishing, image cropping and comparison, and a web UI built with HTMX.</Description>
   <Category>MediaApp:Other</Category>
   <WebUI>http://[IP]:[PORT:1973]</WebUI>
-  <Icon>https://raw.githubusercontent.com/sydlexius/unraid-templates/main/icon.svg</Icon>
+  <Icon>https://raw.githubusercontent.com/sydlexius/stillwater/main/web/static/img/favicon.svg</Icon>
   <ExtraParams/>
   <PostArgs/>
   <DonateText/>
