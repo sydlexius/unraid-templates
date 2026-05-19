@@ -6,7 +6,11 @@
   <TemplateURL>https://raw.githubusercontent.com/sydlexius/unraid-templates/main/templates/stillwater.xml</TemplateURL>
   <Branch>
     <Tag>latest</Tag>
-    <TagDescription>Latest stable release</TagDescription>
+    <TagDescription>Stable releases. Recommended for most users.</TagDescription>
+  </Branch>
+  <Branch>
+    <Tag>nightly</Tag>
+    <TagDescription>Nightly builds from main. New features sooner, occasional rough edges. Not recommended for production data.</TagDescription>
   </Branch>
   <Network>bridge</Network>
   <Shell>sh</Shell>
