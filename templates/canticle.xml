@@ -3,7 +3,7 @@
   <Name>Canticle</Name>
   <Repository>ghcr.io/doxazo-net/canticle</Repository>
   <Registry>https://github.com/doxazo-net/canticle/pkgs/container/canticle</Registry>
-  <TemplateURL>https://raw.githubusercontent.com/doxazo-net/unraid-templates/main/templates/canticle.xml</TemplateURL>
+  <TemplateURL>https://raw.githubusercontent.com/sydlexius/unraid-templates/main/templates/canticle.xml</TemplateURL>
   <Branch>
     <Tag>latest</Tag>
     <TagDescription>Stable releases. Recommended for most users.</TagDescription>
