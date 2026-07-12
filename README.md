@@ -7,6 +7,7 @@ Docker templates for Unraid Community Applications.
 | Application | Description |
 |---|---|
 | [Stillwater](https://github.com/sydlexius/stillwater) | Artist metadata and image management for Emby, Jellyfin, and Kodi |
+| [Canticle](https://github.com/doxazo-net/canticle) | Time-synced (.lrc) lyrics for your music library, on a schedule and via Lidarr webhooks |
 
 ## Usage
 

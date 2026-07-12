@@ -15,8 +15,8 @@
   <Network>bridge</Network>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://sydlexius.github.io/stillwater</Support>
-  <Project>https://github.com/sydlexius/stillwater</Project>
+  <Support>https://github.com/sydlexius/stillwater/issues</Support>
+  <Project>https://sydlexius.github.io/stillwater/</Project>
   <Overview>Artist metadata and image management for Emby, Jellyfin, and Kodi. Manage NFO files, artwork, and metadata across your media library.</Overview>
   <Description>Stillwater is a self-hosted web application for managing artist and composer metadata across media streaming platforms. It handles NFO files, artist artwork, and metadata for Emby, Jellyfin, and Kodi libraries. Features include rule-based metadata management, multi-platform publishing, image cropping and comparison, and a web UI built with HTMX.</Description>
   <Category>MediaApp:Other</Category>

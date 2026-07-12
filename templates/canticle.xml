@@ -15,8 +15,8 @@
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
-  <Support>https://doxazo-net.github.io/canticle</Support>
-  <Project>https://github.com/doxazo-net/canticle</Project>
+  <Support>https://github.com/doxazo-net/canticle/issues</Support>
+  <Project>https://doxazo-net.github.io/canticle/</Project>
   <Overview>Fetches time-synced (.lrc) lyrics for your music library from Musixmatch, on a schedule and via Lidarr webhooks, and writes them next to your audio files.</Overview>
   <Description>Canticle is a self-hosted lyrics fetcher and webhook service for your music library. It pulls time-synced .lrc lyrics from Musixmatch and writes them next to each audio file. Run it as a Lidarr (or any *arr) webhook endpoint to fetch lyrics on import, on a scheduled library scan, or both. Includes a web dashboard, a local SQLite cache, multi-provider fallback, and optional audio-based instrumental detection.</Description>
   <Category>MediaApp:Music Tools:Utilities</Category>
