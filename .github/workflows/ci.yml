@@ -1,0 +1,48 @@
+# Validates the Unraid templates. There is no code to build here, so CI is
+# limited to what can actually go wrong: malformed XML, which Unraid's Community
+# Applications parser rejects silently, leaving the template invisible.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  xml-lint:
+    name: XML Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Install libxml2-utils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libxml2-utils
+
+      - name: Check every XML file is well-formed
+        run: |
+          set -euo pipefail
+          # Fail loudly if the glob matches nothing rather than silently passing.
+          shopt -s nullglob globstar
+          files=(**/*.xml)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::error::No XML files found - the template directory layout changed"
+            exit 1
+          fi
+          rc=0
+          for f in "${files[@]}"; do
+            if xmllint --noout "$f"; then
+              echo "ok: $f"
+            else
+              echo "::error file=$f::XML is not well-formed"
+              rc=1
+            fi
+          done
+          exit "$rc"
