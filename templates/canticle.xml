@@ -17,6 +17,10 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/sydlexius/canticle/issues</Support>
   <Project>https://sydlexius.github.io/canticle/</Project>
+  <ReadMe>https://sydlexius.github.io/canticle/GETTING_STARTED/</ReadMe>
+  <Screenshot>https://raw.githubusercontent.com/sydlexius/canticle/main/docs/img/canticle-dashboard.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/sydlexius/canticle/main/docs/img/canticle-webhook-keys.png</Screenshot>
+  <ExtraSearchTerms>lrc synced lyrics timed lyrics musixmatch petitlyrics lidarr</ExtraSearchTerms>
   <Overview>Fetches time-synced (.lrc) lyrics for your music library from Musixmatch, on a schedule and via Lidarr webhooks, and writes them next to your audio files.</Overview>
   <Description>Canticle is a self-hosted lyrics fetcher and webhook service for your music library. It pulls time-synced .lrc lyrics from Musixmatch and writes them next to each audio file. Run it as a Lidarr (or any *arr) webhook endpoint to fetch lyrics on import, on a scheduled library scan, or both. Includes a web dashboard, a local SQLite cache, multi-provider fallback, and optional audio-based instrumental detection.</Description>
   <Category>MediaApp:Music Tools:Utilities</Category>
