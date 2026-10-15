@@ -1,7 +1,7 @@
-# The workflows are the only executable code in this repo, and they hold the
-# GITHUB_TOKEN. CodeQL's `actions` analysis looks for exactly the issues that
-# matter here: untrusted checkout of a PR head, script injection via ${{ }}
-# interpolation of attacker-controlled fields, and over-scoped tokens.
+# The workflows hold the GITHUB_TOKEN. CodeQL's `actions` analysis looks for
+# exactly the issues that matter there: untrusted checkout of a PR head, script
+# injection via ${{ }} interpolation of attacker-controlled fields, and
+# over-scoped tokens. The only other code is the Python drift checker.
 name: CodeQL
 
 on:
@@ -38,3 +38,30 @@ jobs:
         uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
         with:
           category: /language:actions
+
+  # A separate job rather than a second language in analyze-actions: "Analyze
+  # Actions" is a required status check by name, and a matrix would rename it.
+  # The drift checker fetches .plg files from the network and parses them.
+  analyze-python:
+    name: Analyze Python
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          languages: python
+          build-mode: none
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          category: /language:python
