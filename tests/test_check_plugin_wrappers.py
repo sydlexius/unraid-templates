@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
+import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest import mock
@@ -168,36 +169,49 @@ class FakeResponse(io.BytesIO):
 
 class FetchTest(unittest.TestCase):
     def test_non_https_refused_without_a_request(self):
-        with mock.patch("urllib.request.urlopen") as urlopen:
+        with mock.patch.object(cpw._OPENER, "open") as urlopen:
             with self.assertRaises(ValueError):
                 cpw.fetch("http://example.com/demo.plg")
             urlopen.assert_not_called()
 
     def test_redirect_to_http_refused(self):
         redirected = FakeResponse(b"<PLUGIN/>", "http://evil.example/x")
-        with mock.patch("urllib.request.urlopen", return_value=redirected), self.assertRaisesRegex(ValueError, "non-https"):
+        with mock.patch.object(cpw._OPENER, "open", return_value=redirected), self.assertRaisesRegex(ValueError, "non-https"):
             cpw.fetch(URL)
+
+    def test_redirect_handler_refuses_http_hop(self):
+        # Checked per hop, so https -> http -> https cannot slip through on an
+        # https final URL.
+        handler = cpw._HttpsOnlyRedirect()
+        req = urllib.request.Request(URL)
+        with self.assertRaisesRegex(ValueError, "non-https"):
+            handler.redirect_request(req, None, 302, "Found", {}, "http://evil.example/x")
+        nxt = handler.redirect_request(req, None, 302, "Found", {}, "https://objects.example/demo.plg")
+        self.assertEqual(nxt.full_url, "https://objects.example/demo.plg")
+
+    def test_opener_uses_the_https_only_handler(self):
+        self.assertTrue(any(isinstance(h, cpw._HttpsOnlyRedirect) for h in cpw._OPENER.handlers))
 
     def test_oversized_body_refused(self):
         big = b"x" * (cpw.MAX_PLG_BYTES + 1)
-        with mock.patch("urllib.request.urlopen", return_value=FakeResponse(big)), self.assertRaisesRegex(ValueError, "larger than"):
+        with mock.patch.object(cpw._OPENER, "open", return_value=FakeResponse(big)), self.assertRaisesRegex(ValueError, "larger than"):
             cpw.fetch(URL)
 
     def test_transient_404_is_retried(self):
         err = urllib.error.HTTPError(URL, 404, "Not Found", {}, None)
-        with mock.patch("urllib.request.urlopen", side_effect=[err, FakeResponse(b"<PLUGIN/>")]):
+        with mock.patch.object(cpw._OPENER, "open", side_effect=[err, FakeResponse(b"<PLUGIN/>")]):
             self.assertEqual(cpw.fetch(URL, sleep=lambda s: None), b"<PLUGIN/>")
 
     def test_persistent_failure_raises_after_retries(self):
         err = urllib.error.HTTPError(URL, 503, "Unavailable", {}, None)
-        with mock.patch("urllib.request.urlopen", side_effect=[err] * 3) as urlopen:
+        with mock.patch.object(cpw._OPENER, "open", side_effect=[err] * 3) as urlopen:
             with self.assertRaises(urllib.error.HTTPError):
                 cpw.fetch(URL, sleep=lambda s: None)
             self.assertEqual(urlopen.call_count, 3)
 
     def test_non_transient_error_is_not_retried(self):
         err = urllib.error.HTTPError(URL, 403, "Forbidden", {}, None)
-        with mock.patch("urllib.request.urlopen", side_effect=[err]) as urlopen:
+        with mock.patch.object(cpw._OPENER, "open", side_effect=[err]) as urlopen:
             with self.assertRaises(urllib.error.HTTPError):
                 cpw.fetch(URL, sleep=lambda s: None)
             self.assertEqual(urlopen.call_count, 1)
@@ -255,7 +269,7 @@ class MainTest(unittest.TestCase):
 
     def test_http_plugin_url_returns_1_without_fetching(self):
         self.add_wrapper(wrapper(PluginURL="http://example.com/demo.plg"))
-        with mock.patch("urllib.request.urlopen") as urlopen, contextlib.redirect_stdout(io.StringIO()):
+        with mock.patch.object(cpw._OPENER, "open") as urlopen, contextlib.redirect_stdout(io.StringIO()):
             rc = cpw.main([])
         self.assertEqual(rc, 1)
         urlopen.assert_not_called()

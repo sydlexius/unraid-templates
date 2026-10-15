@@ -52,6 +52,13 @@ every pull request, and fails if the published `.plg` disagrees on `pluginURL`
 add its wrapper under `plugins/` and a row to the table above; the check picks
 it up automatically.
 
+This repository is already accepted by Community Applications, so a new wrapper
+does not need re-submitting at <https://ca.unraid.net/submit>: CA picks it up
+from the default branch. A new plugin is held back from the catalog until a CA
+moderator code-reviews it, which can take hours to days. That conclusion, and
+its sources, are recorded on
+[#21](https://github.com/sydlexius/unraid-templates/issues/21#issuecomment-6181728869).
+
 ## Support
 
 Open an issue on the relevant application's or plugin's GitHub repository.

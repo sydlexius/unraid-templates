@@ -54,11 +54,25 @@ RETRY_DELAYS = (5, 20)
 RETRY_STATUSES = {404, 429, 500, 502, 503, 504}
 
 
+class _HttpsOnlyRedirect(urllib.request.HTTPRedirectHandler):
+    """Refuses each non-https redirect BEFORE following it. The default handler
+    follows https -> http, and a chain that hops through http and back to https
+    would pass a check made only on the final URL."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not newurl.startswith("https://"):
+            raise ValueError(f"PluginURL redirected to non-https {newurl}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_OPENER = urllib.request.build_opener(_HttpsOnlyRedirect)
+
+
 def _fetch_once(url):
     req = urllib.request.Request(url, headers={"User-Agent": "unraid-templates-drift-check"})
-    with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT) as resp:
-        # urllib follows redirects to plain http, so the https check has to be
-        # made on where the request ENDED, not only where it started.
+    with _OPENER.open(req, timeout=FETCH_TIMEOUT) as resp:
+        # Second guard behind _HttpsOnlyRedirect: wherever the request ENDED
+        # must be https too.
         if not resp.geturl().startswith("https://"):
             raise ValueError(f"PluginURL redirected to non-https {resp.geturl()}")
         body = resp.read(MAX_PLG_BYTES + 1)
