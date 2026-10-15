@@ -1,12 +1,18 @@
-# Validates the Unraid templates. There is no code to build here, so CI is
-# limited to what can actually go wrong: malformed XML, which Unraid's Community
-# Applications parser rejects silently, leaving the template invisible.
+# Validates the Unraid templates and plugin wrappers. There is no code to build
+# here, so CI is limited to what can actually go wrong: malformed XML, which
+# Unraid's Community Applications parser rejects silently, leaving the template
+# invisible; and a plugin wrapper drifting from the .plg it points at.
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
+  # A plugin release changes its .plg without any commit here, so drift between
+  # a wrapper and its .plg can only be caught by checking on a schedule too.
+  schedule:
+    - cron: "17 14 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -46,3 +52,24 @@ jobs:
             fi
           done
           exit "$rc"
+
+  plugin-drift:
+    name: Plugin Wrapper Drift
+    runs-on: ubuntu-latest
+    # Fetches from hosts named in the wrappers; bound a slow one well below the
+    # 6-hour default.
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Unit-test the drift check
+        run: python3 -m unittest discover -s tests -v
+
+      # Fetches each wrapper's <PluginURL> and compares it with the published .plg.
+      - name: Check every plugin wrapper agrees with its .plg
+        run: python3 scripts/check_plugin_wrappers.py

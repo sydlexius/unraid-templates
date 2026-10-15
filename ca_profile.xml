@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
+<!-- Root element: deliberately left as <RepositoryInfo>. The official starter
+     spells it <CommunityApplications>, but this spelling is live and accepted
+     for this repository today, so renaming it would risk a working listing for
+     no functional gain. See issue #21. -->
 <RepositoryInfo>
-  <Profile>Unraid Docker templates maintained by sydlexius. Support for each application is available via its GitHub Issues page.</Profile>
+  <Profile>Unraid Docker templates and plugins maintained by sydlexius. Support for each application and plugin is available via its GitHub Issues page.</Profile>
   <Icon>https://raw.githubusercontent.com/sydlexius/unraid-templates/main/icon.svg</Icon>
   <WebPage>https://github.com/sydlexius</WebPage>
 </RepositoryInfo>
