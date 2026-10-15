@@ -9,7 +9,7 @@ Docker containers, installed from a template.
 | Application | Description |
 |---|---|
 | [Stillwater](https://github.com/sydlexius/stillwater) | Artist metadata and image management for Emby, Jellyfin, and Kodi |
-| [Canticle](https://github.com/sydlexius/canticle) | Time-synced (.lrc) lyrics for your music library, on a schedule and via Lidarr webhooks |
+| [Canticle](https://github.com/sydlexius/canticle) | Time-synced (.lrc) lyrics for your music library from Musixmatch, PetitLyrics and YouTube Music, on a schedule, on file changes and via Lidarr webhooks |
 
 ## Plugins
 
